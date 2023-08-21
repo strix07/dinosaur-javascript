@@ -30,6 +30,36 @@ Goodbye world!
 
 [instagram](https://www.instagram.com/sr.ekko/)
 
-<!--esto es un cometario--->
+<!-- Theme: GitHub Light & Dark -->
 
-<meta name="prefers-color-scheme" content="dark">
+<style>
+@media (prefers-color-scheme: light) {
+  body {
+    background-color: #fff;
+    color: #000; 
+  }
+  
+  a {
+    color: #0366d6;
+  }
+  
+  code {
+    background-color: #f6f8fa;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #0d1117;
+    color: #c9d1d9;
+  }
+  
+  a {
+    color: #58a6ff;
+  }
+
+  code {
+    background-color: #21262d;
+  }  
+}
+</style>
