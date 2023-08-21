@@ -30,38 +30,29 @@ Goodbye world!
 
 [instagram](https://www.instagram.com/sr.ekko/)
 
-<!-- Theme: GitHub Light & Dark -->
-<body>
-<style>
-@media (prefers-color-scheme: light) {
-  body {
-    background-color: #fff;
-    color: #000; 
-  }
-  
-  a {
-    color: #0366d6;
-  }
-  
-  code {
-    background-color: #f6f8fa;
-  }
-}
+<!-- Theme: GitHub Dark -->
 
-@media (prefers-color-scheme: dark) {
+<style>
 body {
-background-color: #0d1117;
-color: #c9d1d9;
+  background-color: #0d1117;
+  color: #c9d1d9;
 }
 
 a {
-color: #58a6ff;
+  color: #58a6ff;
+}
+
+h1, h2, h3 {
+  border-bottom: 1px solid #21262d;
+}
+
+blockquote {
+  background-color: #161b22;  
+  border-left: 4px solid #30363d;
 }
 
 code {
-background-color: #21262d;
-}  
+  background-color: #21262d;
 }
-</style>
 
-</body>
+</style>
