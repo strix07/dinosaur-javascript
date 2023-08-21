@@ -31,3 +31,5 @@ Goodbye world!
 [instagram](https://www.instagram.com/sr.ekko/)
 
 <!--esto es un cometario--->
+
+<meta name="prefers-color-scheme" content="dark">
