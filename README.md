@@ -31,7 +31,7 @@ Goodbye world!
 [instagram](https://www.instagram.com/sr.ekko/)
 
 <!-- Theme: GitHub Light & Dark -->
-
+<body>
 <style>
 @media (prefers-color-scheme: light) {
   body {
@@ -49,17 +49,19 @@ Goodbye world!
 }
 
 @media (prefers-color-scheme: dark) {
-  body {
-    background-color: #0d1117;
-    color: #c9d1d9;
-  }
-  
-  a {
-    color: #58a6ff;
-  }
+body {
+background-color: #0d1117;
+color: #c9d1d9;
+}
 
-  code {
-    background-color: #21262d;
-  }  
+a {
+color: #58a6ff;
+}
+
+code {
+background-color: #21262d;
+}  
 }
 </style>
+
+</body>
