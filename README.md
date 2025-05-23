@@ -1,31 +1,43 @@
-# Dinosaur project
+# Chrome Dino Game
 
-This is my _first project_ in javascript I hope you like it, `fell free to use it`. It is copy of the popular game **dinosaur of google**.
+A simple implementation of the Chrome dinosaur game.
 
----
+## How to Play
 
-## Comands
+- Press the **Space Bar** to make the dinosaur jump.
+- Avoid the cacti to keep playing.
+- The game speeds up as your score increases.
 
-| up   | down      |
-| ---- | --------- |
-| jump | bend down |
+## Features
 
----
+- Classic dinosaur jumping gameplay.
+- Score tracking.
+- Increasing difficulty over time.
+- Dynamic background changes based on score (simulating day/night cycle).
 
-> Java?
+## Technologies Used
 
-![this is javascript](https://jonmircha.com/img/blog/this-is-javascript.jpg)
+- HTML
+- CSS
+- JavaScript
 
----
+## Game Preview
 
-### Finally!
+Here's a glimpse of the game:
 
-```
-Goodbye world!
-```
+![Dino](img/dino.png)
+_The player character_
 
----
+![Cactus 1](img/cactus1.png)
+_One type of obstacle_
 
-## Contacto
+![Cactus 2](img/cactus2.png)
+_Another type of obstacle_
 
-[instagram](https://www.instagram.com/sr.ekko/)
+![Cloud](img/nube.png)
+_Decorative cloud_
+
+![Ground](img/suelo.png)
+_The ground the dino runs on_
+
+To play the game, open the `index.html` file in your web browser.
