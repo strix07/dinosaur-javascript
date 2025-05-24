@@ -1,0 +1,27 @@
+{
+  "name": "Dinosaur Game",
+  "short_name": "DinoGame",
+  "description": "A simple dinosaur game that can be played offline.",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#ffe2d1",
+  "theme_color": "#0b0c0a",
+  "icons": [
+    {
+      "src": "/img/dino.png",
+      "sizes": "84x84",
+      "type": "image/png"
+    },
+    {
+      "src": "/img/dino.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/img/dino.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

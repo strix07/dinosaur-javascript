@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="manifest" href="manifest.json">
     <title>Dinosaurio Chrome V2</title>
     <style>
       * {
@@ -257,6 +258,17 @@
         textoScore = document.querySelector(".score");
         dino = document.querySelector(".dino");
         document.addEventListener("keydown", HandleKeyDown);
+        contenedor.addEventListener('touchstart', HandleTouchStart, { passive: true });
+      }
+
+      function HandleTouchStart(ev) {
+        // If the game is over (parado is true), a touch will restart the game.
+        if (parado) {
+          Restart();
+        } else {
+          // If the game is running, a touch will make the dino jump.
+          Saltar();
+        }
       }
 
       function Update() {
@@ -438,6 +450,19 @@
           aRect.left + aRect.width - paddingRight < bRect.left ||
           aRect.left + paddingLeft > bRect.left + bRect.width
         );
+      }
+    </script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then(registration => {
+              console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            })
+            .catch(err => {
+              console.log('ServiceWorker registration failed: ', err);
+            });
+        });
       }
     </script>
   </body>
