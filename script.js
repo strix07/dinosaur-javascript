@@ -73,6 +73,7 @@ function Restart() {
   score = 0;
   parado = false;
   saltando = false;
+  isDucking = false; // Reset ducking state
   tiempoHastaObstaculo = 2;
   tiempoHastaNube = 0.5;
   obstaculos = [];
@@ -83,6 +84,7 @@ function Restart() {
   textoScore.innerText = score; 
   
   // Reset dino state
+  dino.classList.remove('dino-ducking'); // Ensure ducking class is removed
   dino.classList.add("dino-corriendo");
   dino.classList.remove("dino-estrellado");
   
@@ -127,6 +129,7 @@ var velNube = 0.5;
 
 var highScore = 0; // Variable to store the high score
 var isPaused = false; // Pause state variable
+var isDucking = false; // Ducking state variable
 
 var contenedor;
 var dino;
@@ -144,8 +147,10 @@ function Start() {
   highScoreText = document.querySelector(".high-score"); // High score element
   pauseMessageElement = document.querySelector(".pause-message"); // Get pause message element
   dino = document.querySelector(".dino");
-  document.addEventListener("keydown", HandleKeyDown); // For jumping
-  document.addEventListener("keydown", HandlePauseKey); // For pausing
+  document.addEventListener("keydown", HandleKeyDown); // For jumping (Space)
+  document.addEventListener("keydown", HandlePauseKey); // For pausing (P)
+  document.addEventListener("keydown", HandleDuckKeyDown); // For starting duck (ArrowDown)
+  document.addEventListener("keyup", HandleDuckKeyUp); // For ending duck (ArrowDown)
   contenedor.addEventListener('touchstart', HandleTouchStart, { passive: true });
 
   // Load high score from localStorage
@@ -205,13 +210,38 @@ function Update() {
 }
 
 function HandleKeyDown(ev) {
-  if (ev.keyCode == 32 && !isPaused) { // Space key, only jump if not paused
+  if (ev.keyCode == 32 && !isPaused && !isDucking) { // Space key, only jump if not paused and not ducking
     Saltar();
   }
 }
 
+function HandleDuckKeyDown(ev) {
+  if (ev.key === "ArrowDown" && !isPaused && !parado) {
+    ev.preventDefault();
+    if (!saltando && !isDucking) { // Only start ducking if on the ground and not already ducking
+      isDucking = true;
+      dino.classList.add('dino-ducking');
+      dino.classList.remove('dino-corriendo');
+      playBeep(300, 70, 0.08, 'sine'); // Ducking sound
+    }
+  }
+}
+
+function HandleDuckKeyUp(ev) {
+  if (ev.key === "ArrowDown" && isDucking) { // Check isDucking here to ensure we only act if ducking was active
+    ev.preventDefault();
+    isDucking = false;
+    dino.classList.remove('dino-ducking');
+    // If on ground, not jumping, and game not over, resume running animation
+    if (dinoPosY === sueloY && !saltando && !parado) {
+      dino.classList.add('dino-corriendo');
+    }
+  }
+}
+
 function Saltar() {
-  if (dinoPosY === sueloY) {
+  if (isDucking) return; // Prevent jumping while ducking
+  if (dinoPosY === sueloY) { // Only jump if on the ground
     saltando = true;
     velY = impulso;
     dino.classList.remove("dino-corriendo");
@@ -230,7 +260,20 @@ function MoverDinosaurio() {
 function TocarSuelo() {
   dinoPosY = sueloY;
   velY = 0;
-  if (saltando) {
+  if (saltando) { // This means we just landed from a jump
+    if (isDucking) { // If duck key is still held upon landing
+      dino.classList.add('dino-ducking');
+      dino.classList.remove('dino-corriendo');
+    } else { // If duck key is not held upon landing
+      dino.classList.remove('dino-ducking');
+      if (!parado) { // Only add 'dino-corriendo' if game is not over
+          dino.classList.add("dino-corriendo");
+      }
+    }
+  } else if (!isDucking && !parado) { 
+    // This case handles initial game start or situations other than landing.
+    // Ensure dino is running if not ducking and game is not over.
+    dino.classList.remove('dino-ducking');
     dino.classList.add("dino-corriendo");
   }
   saltando = false;
@@ -268,10 +311,21 @@ function DecidirCrearNubes() {
 function CrearObstaculo() {
   var obstaculo = document.createElement("div");
   contenedor.appendChild(obstaculo);
-  obstaculo.classList.add("cactus");
-  if (Math.random() > 0.5) obstaculo.classList.add("cactus2");
   obstaculo.posX = contenedor.clientWidth;
   obstaculo.style.left = contenedor.clientWidth + "px";
+
+  // Decide if it's a flying or ground obstacle
+  if (Math.random() < 0.3) { // 30% chance for a flying obstacle
+    obstaculo.classList.add("flying-obstacle");
+    obstaculo.style.bottom = "75px"; // Position for ducking under
+    // Flying obstacles will use the .flying-obstacle CSS for background (cactus1.png)
+  } else { // 70% chance for a ground obstacle
+    obstaculo.classList.add("cactus");
+    if (Math.random() > 0.5) {
+      obstaculo.classList.add("cactus2");
+    }
+    obstaculo.style.bottom = obstaculoPosY + "px"; // Default ground position (16px)
+  }
 
   obstaculos.push(obstaculo);
   tiempoHastaObstaculo =
@@ -361,7 +415,23 @@ function DetectarColision() {
       //EVADE
       break; //al estar en orden, no puede chocar con más
     } else {
-      if (IsCollision(dino, obstaculos[i], 10, 30, 15, 20)) {
+      var dinoRect = dino.getBoundingClientRect();
+      var effectiveDinoRect = {
+        top: dinoRect.top,
+        left: dinoRect.left,
+        width: dinoRect.width,
+        height: dinoRect.height
+      };
+
+      if (isDucking) {
+        effectiveDinoRect.height = 50; // Ducking height defined in CSS
+        // Original height is 84px. Difference is 34px.
+        // Since 'bottom' is fixed in CSS, the 'top' effectively moves down (increases value).
+        effectiveDinoRect.top = dinoRect.top + (84 - 50); 
+      }
+      
+      // Pass the potentially modified dinoRect to IsCollision
+      if (IsCollision(effectiveDinoRect, obstaculos[i], 10, 30, 15, 20)) {
         GameOver();
       }
     }
@@ -369,20 +439,21 @@ function DetectarColision() {
 }
 
 function IsCollision(
-  a,
-  b,
+  dinoEffectiveRect, // Modified dino bounding box
+  obstacle,          // Obstacle DOM element
   paddingTop,
   paddingRight,
   paddingBottom,
   paddingLeft
 ) {
-  var aRect = a.getBoundingClientRect();
-  var bRect = b.getBoundingClientRect();
+  // var aRect = a.getBoundingClientRect(); // 'a' is now dinoEffectiveRect
+  var bRect = obstacle.getBoundingClientRect();
 
+  // Collision checks using dinoEffectiveRect (aRect) and bRect
   return !(
-    aRect.top + aRect.height - paddingBottom < bRect.top ||
-    aRect.top + paddingTop > bRect.top + bRect.height ||
-    aRect.left + aRect.width - paddingRight < bRect.left ||
-    aRect.left + paddingLeft > bRect.left + bRect.width
+    dinoEffectiveRect.top + dinoEffectiveRect.height - paddingBottom < bRect.top ||
+    dinoEffectiveRect.top + paddingTop > bRect.top + bRect.height ||
+    dinoEffectiveRect.left + dinoEffectiveRect.width - paddingRight < bRect.left ||
+    dinoEffectiveRect.left + paddingLeft > bRect.left + bRect.width
   );
 }

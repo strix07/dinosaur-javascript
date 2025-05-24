@@ -64,6 +64,24 @@
         background-position-x: -252px;
       }
 
+      .dino-ducking {
+        height: 50px; /* Reduced height for squashing effect */
+        /* The dino's bottom is pinned by "bottom: 22px" from .dino class.
+           Reducing height makes it appear to squash downwards. */
+        /* We want to show the top part of the sprite, so background-position-y: 0px is fine. */
+        background-position-x: -84px; /* Use one of the running frames, e.g., the first one. */
+        animation: none; /* Stop the running animation */
+      }
+
+      .flying-obstacle {
+        width: 46px; /* Using cactus1.png dimensions */
+        height: 96px;
+        background: url(img/cactus1.png) no-repeat;
+        position: absolute;
+        z-index: 1;
+        /* style.bottom will be set by JS */
+      }
+
       .suelo {
         width: 200%;
         height: 42px;
